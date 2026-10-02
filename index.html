@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Interest & Date Calculator</title>
+<title>Interest Calculator</title>
 
 <style>
 * {
@@ -43,6 +43,35 @@ body {
     opacity: 0.85;
 }
 
+/* Tab Switching Styles */
+.tab-container {
+    display: flex;
+    background: #e2e8f0;
+    padding: 5px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    gap: 5px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 12px;
+    font-size: 15px;
+    font-weight: bold;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+    background: transparent;
+    color: #475569;
+    transition: 0.3s;
+}
+
+.tab-btn.active {
+    background: #172554;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
 .card {
     background: white;
     padding: 18px;
@@ -67,7 +96,7 @@ body {
 }
 
 .input-box {
-    flex: 1 1 200px;
+    flex: 1 1 180px;
 }
 
 label {
@@ -111,7 +140,7 @@ input:focus {
     margin-top: 15px;
 }
 
-button {
+button.action-btn {
     flex: 1;
     border: 0;
     border-radius: 8px;
@@ -131,18 +160,24 @@ button {
     color: #334155;
 }
 
+/* Results Section Styling (Matching Screenshot) */
+.results-container {
+    display: none;
+    margin-top: 20px;
+}
+
 .summary-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-top: 15px;
+    margin-top: 10px;
 }
 
 .summary-box {
-    flex: 1 1 180px;
+    flex: 1 1 45%;
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 12px;
 }
 
@@ -153,7 +188,7 @@ button {
 }
 
 .summary-value {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: bold;
     color: #172554;
 }
@@ -165,23 +200,68 @@ button {
 .final-box {
     background: #172554;
     color: white;
+    border-radius: 10px;
+    padding: 14px;
+    margin-top: 10px;
 }
 
-.final-box .summary-label,
+.final-box .summary-label {
+    color: #cbd5e1;
+    font-size: 13px;
+}
+
 .final-box .summary-value {
     color: white;
+    font-size: 24px;
 }
 
-.final-box .summary-value {
-    font-size: 22px;
-}
-
-.highlight-box {
+/* Extra Days Box Styling */
+.extra-days-box {
     background: #eff6ff;
-    border: 1px dashed #2563eb;
+    border-left: 4px solid #2563eb;
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 14px;
+    font-size: 13px;
+    color: #1e293b;
 }
-.highlight-box .summary-value {
+
+.extra-days-title {
+    font-weight: bold;
     color: #1d4ed8;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.extra-days-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+}
+
+/* Table Styling */
+.table-box {
+    overflow-x: auto;
+    margin-top: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background: white;
+}
+
+th {
+    background: #172554;
+    color: white;
+    padding: 10px;
+    text-align: left;
+}
+
+td {
+    border-bottom: 1px solid #e2e8f0;
+    padding: 10px;
 }
 </style>
 </head>
@@ -189,59 +269,106 @@ button {
 
 <div class="container">
     <div class="header">
-        <h1>Interest & Date Calculator</h1>
-        <p>Monthly Interest and Date Difference Calculator</p>
+        <h1>Interest Calculator</h1>
+        <p>Monthly & Yearly Compounding Calculator</p>
     </div>
 
-    <!-- SECTION 1: DATE TO DATE CALCULATOR -->
-    <div class="card">
-        <div class="title">1. Date-to-Date Interest Calculator</div>
+    <!-- TAB SWITCHER -->
+    <div class="tab-container">
+        <button class="tab-btn active" id="tabCompoundBtn" onclick="switchTab('compound')">Compound Interest</button>
+        <button class="tab-btn" id="tabSimpleBtn" onclick="switchTab('simple')">Simple Interest</button>
+    </div>
+
+    <!-- ================= 1. COMPOUND INTEREST SECTION ================= -->
+    <div id="compoundSection" class="card">
+        <div class="title">📈 Compound Interest (Yearly Addition)</div>
         
         <div class="input-grid">
             <div class="input-box">
                 <label>Principal Amount (₹)</label>
-                <input type="number" id="principal" placeholder="e.g. 50000">
+                <input type="number" id="cmpPrincipal" placeholder="e.g. 10000">
             </div>
             <div class="input-box">
                 <label>Monthly Rate (%)</label>
-                <input type="number" id="rate" step="0.01" placeholder="e.g. 2.0">
+                <input type="number" id="cmpRate" step="0.01" placeholder="e.g. 3.0">
             </div>
             <div class="input-box">
                 <label>Start Date</label>
-                <input type="date" id="startDate">
+                <input type="date" id="cmpStartDate">
             </div>
             <div class="input-box">
                 <label>End Date</label>
-                <input type="date" id="endDate">
+                <input type="date" id="cmpEndDate">
             </div>
         </div>
 
-        <div id="errSection1" class="error-msg"></div>
+        <div id="errCompound" class="error-msg"></div>
 
         <div class="buttons">
-            <button class="btn-calc" onclick="calculateDateInterest()">Calculate Date Interest</button>
-            <button class="btn-reset" onclick="resetDateFields()">Reset</button>
+            <button class="action-btn btn-calc" onclick="calculateCompound()">Calculate Interest</button>
+            <button class="action-btn btn-reset" onclick="resetCompound()">Reset</button>
         </div>
 
-        <div class="summary-grid">
-            <div class="summary-box">
-                <div class="summary-label">Total Duration</div>
-                <div class="summary-value" id="resDuration">-</div>
+        <!-- Compound Results Container -->
+        <div id="resultsCompound" class="results-container">
+            <div class="title" style="font-size:16px; margin-top:10px;">📊 Interest Summary</div>
+            
+            <div class="summary-grid">
+                <div class="summary-box">
+                    <div class="summary-label">Principal Amount</div>
+                    <div class="summary-value" id="cmpResPrincipal">₹ 0</div>
+                </div>
+                <div class="summary-box">
+                    <div class="summary-label">1 Month Interest (Initial)</div>
+                    <div class="summary-value" id="cmpRes1m">₹ 0</div>
+                </div>
+                <div class="summary-box">
+                    <div class="summary-label">Total Duration</div>
+                    <div class="summary-value" id="cmpResDuration">-</div>
+                </div>
+                <div class="summary-box">
+                    <div class="summary-label">Total Interest</div>
+                    <div class="summary-value" id="cmpResInterest">₹ 0</div>
+                </div>
             </div>
-            <div class="summary-box">
-                <div class="summary-label">Total Interest</div>
-                <div class="summary-value" id="resInterest">₹ 0.00</div>
+
+            <div class="final-box">
+                <div class="summary-label">Final Amount</div>
+                <div class="summary-value" id="cmpResFinal">₹ 0</div>
             </div>
-            <div class="summary-box full-width final-box">
-                <div class="summary-label">Total Payable Amount</div>
-                <div class="summary-value" id="resTotal">₹ 0.00</div>
+
+            <!-- Extra Days Box -->
+            <div id="cmpExtraDaysBox" class="extra-days-box" style="display:none;">
+                <div class="extra-days-title">Extra Days Calculation</div>
+                <div class="extra-days-row"><span>Current 1 Month Interest:</span> <b id="cmpCur1M">₹ 0</b></div>
+                <div class="extra-days-row"><span>1 Day Interest:</span> <b id="cmp1Day">₹ 0</b></div>
+                <div class="extra-days-row"><span><span id="cmpDaysCount">0</span> Days Interest:</span> <b id="cmpDaysVal">₹ 0</b></div>
+                <div class="extra-days-row" style="border-top:1px solid #cbd5e1; margin-top:4px; padding-top:4px;"><span>Total Interest:</span> <b id="cmpTotalIntDays">₹ 0</b></div>
+            </div>
+
+            <!-- Breakdown Table -->
+            <div id="cmpTableBox" style="display:none; margin-top:15px;">
+                <div class="title" style="font-size:15px;">📋 Period-wise Interest Breakdown</div>
+                <div class="table-box">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Period</th>
+                                <th>Period Interest</th>
+                                <th>Total Interest</th>
+                                <th>New Principal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cmpTableBody"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- SECTION 2: SIMPLE MONTHLY CALCULATOR -->
-    <div class="card">
-        <div class="title">2. Simple Monthly Interest Calculator (Mahine Ke Hisab Se)</div>
+    <!-- ================= 2. SIMPLE INTEREST SECTION ================= -->
+    <div id="simpleSection" class="card" style="display:none;">
+        <div class="title">📉 Simple Interest (Normal)</div>
         
         <div class="input-grid">
             <div class="input-box">
@@ -254,33 +381,56 @@ button {
             </div>
             <div class="input-box">
                 <label>Total Months</label>
-                <input type="number" id="simMonths" placeholder="e.g. 24">
+                <input type="number" id="simMonths" placeholder="e.g. 12 ya 24">
+            </div>
+            <div class="input-box">
+                <label>Extra Days (Optional)</label>
+                <input type="number" id="simDays" placeholder="e.g. 5">
             </div>
         </div>
 
-        <div id="errSection2" class="error-msg"></div>
+        <div id="errSimple" class="error-msg"></div>
 
         <div class="buttons">
-            <button class="btn-calc" onclick="calculateSimpleInterest()">Calculate Interest</button>
-            <button class="btn-reset" onclick="resetSimpleFields()">Reset</button>
+            <button class="action-btn btn-calc" onclick="calculateSimple()">Calculate Interest</button>
+            <button class="action-btn btn-reset" onclick="resetSimple()">Reset</button>
         </div>
 
-        <div class="summary-grid">
-            <div class="summary-box highlight-box">
-                <div class="summary-label">1 Month Interest (1 Mahina)</div>
-                <div class="summary-value" id="sim1Month">₹ 0.00</div>
+        <!-- Simple Results Container -->
+        <div id="resultsSimple" class="results-container">
+            <div class="title" style="font-size:16px; margin-top:10px;">📊 Interest Summary</div>
+            
+            <div class="summary-grid">
+                <div class="summary-box">
+                    <div class="summary-label">Principal Amount</div>
+                    <div class="summary-value" id="simResPrincipal">₹ 0</div>
+                </div>
+                <div class="summary-box">
+                    <div class="summary-label">1 Month Interest</div>
+                    <div class="summary-value" id="simRes1m">₹ 0</div>
+                </div>
+                <div class="summary-box">
+                    <div class="summary-label">Total Duration</div>
+                    <div class="summary-value" id="simResDuration">-</div>
+                </div>
+                <div class="summary-box">
+                    <div class="summary-label">Total Interest</div>
+                    <div class="summary-value" id="simResInterest">₹ 0</div>
+                </div>
             </div>
-            <div class="summary-box highlight-box">
-                <div class="summary-label">12 Months Interest (1 Saal)</div>
-                <div class="summary-value" id="sim12Months">₹ 0.00</div>
+
+            <div class="final-box">
+                <div class="summary-label">Final Amount</div>
+                <div class="summary-value" id="simResFinal">₹ 0</div>
             </div>
-            <div class="summary-box">
-                <div class="summary-label"><span id="customMonthLabel">0</span> Months Interest</div>
-                <div class="summary-value" id="simCustomInterest">₹ 0.00</div>
-            </div>
-            <div class="summary-box full-width final-box">
-                <div class="summary-label">Total Payable Amount (<span id="customMonthTotalLabel">0</span> Months)</div>
-                <div class="summary-value" id="simTotalAmount">₹ 0.00</div>
+
+            <!-- Extra Days Box Simple -->
+            <div id="simExtraDaysBox" class="extra-days-box" style="display:none;">
+                <div class="extra-days-title">Extra Days Calculation</div>
+                <div class="extra-days-row"><span>1 Month Interest:</span> <b id="simCur1M">₹ 0</b></div>
+                <div class="extra-days-row"><span>1 Day Interest:</span> <b id="sim1Day">₹ 0</b></div>
+                <div class="extra-days-row"><span><span id="simDaysCount">0</span> Days Interest:</span> <b id="simDaysVal">₹ 0</b></div>
+                <div class="extra-days-row" style="border-top:1px solid #cbd5e1; margin-top:4px; padding-top:4px;"><span>Total Interest:</span> <b id="simTotalIntDays">₹ 0</b></div>
             </div>
         </div>
     </div>
@@ -288,118 +438,222 @@ button {
 </div>
 
 <script>
-function showError(elementId, message) {
-    var errBox = document.getElementById(elementId);
-    errBox.innerText = message;
-    errBox.style.display = 'block';
+// ---------- Tab Switcher Function ----------
+function switchTab(tab) {
+    var cmpTab = document.getElementById('compoundSection');
+    var simTab = document.getElementById('simpleSection');
+    var cmpBtn = document.getElementById('tabCompoundBtn');
+    var simBtn = document.getElementById('tabSimpleBtn');
+
+    if (tab === 'compound') {
+        cmpTab.style.display = 'block';
+        simTab.style.display = 'none';
+        cmpBtn.classList.add('active');
+        simBtn.classList.remove('active');
+    } else {
+        cmpTab.style.display = 'none';
+        simTab.style.display = 'block';
+        cmpBtn.classList.remove('active');
+        simBtn.classList.add('active');
+    }
 }
 
-function hideError(elementId) {
-    var errBox = document.getElementById(elementId);
-    errBox.style.display = 'none';
-    errBox.innerText = '';
+// ---------- Error Helper Functions ----------
+function showError(id, msg) {
+    var el = document.getElementById(id);
+    el.innerText = msg;
+    el.style.display = 'block';
+}
+function hideError(id) {
+    var el = document.getElementById(id);
+    el.style.display = 'none';
+    el.innerText = '';
 }
 
-function calculateDateInterest() {
-    hideError('errSection1');
+function formatINR(val) {
+    return '₹' + val.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
 
-    var pInput = document.getElementById('principal').value.trim();
-    var rInput = document.getElementById('rate').value.trim();
-    var startInput = document.getElementById('startDate').value;
-    var endInput = document.getElementById('endDate').value;
+// ---------- 1. COMPOUND INTEREST LOGIC ----------
+function calculateCompound() {
+    hideError('errCompound');
+
+    var pInput = document.getElementById('cmpPrincipal').value.trim();
+    var rInput = document.getElementById('cmpRate').value.trim();
+    var startInput = document.getElementById('cmpStartDate').value;
+    var endInput = document.getElementById('cmpEndDate').value;
 
     if (pInput === "" || rInput === "" || !startInput || !endInput) {
-        showError('errSection1', '⚠️ Kripya Section 1 ke saare fields bharein!');
+        showError('errCompound', '⚠️ Kripya Principal, Monthly Rate, Start Date aur End Date sabhi bharein!');
         return;
     }
 
-    var p = parseFloat(pInput);
+    var origP = parseFloat(pInput);
     var r = parseFloat(rInput);
     var start = new Date(startInput);
     var end = new Date(endInput);
 
-    if (isNaN(p) || isNaN(r) || p <= 0 || r < 0) {
-        showError('errSection1', '⚠️ Kripya Sahi aur Positive Principal Amount aur Rate daalein!');
+    if (isNaN(origP) || isNaN(r) || origP <= 0 || r < 0) {
+        showError('errCompound', '⚠️ Kripya Sahi Positive Principal aur Rate daalein!');
         return;
     }
 
     if (end < start) {
-        showError('errSection1', '⚠️ End Date, Start Date se pehle ki nahi ho sakti!');
+        showError('errCompound', '⚠️ End Date, Start Date se pehle ki nahi ho sakti!');
         return;
     }
 
-    var diffTime = Math.abs(end - start);
-    var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    var dailyInterest = (p * r / 100) / 30;
-    var totalInterest = dailyInterest * diffDays;
-    var totalAmount = p + totalInterest;
+    // Date Diff Logic
+    var y = end.getFullYear() - start.getFullYear();
+    var m = end.getMonth() - start.getMonth();
+    var d = end.getDate() - start.getDate();
 
-    var months = Math.floor(diffDays / 30);
-    var remainingDays = diffDays % 30;
+    if (d < 0) {
+        m--;
+        var prevMonthLastDay = new Date(end.getFullYear(), end.getMonth(), 0).getDate();
+        d += prevMonthLastDay;
+    }
+    if (m < 0) {
+        y--;
+        m += 12;
+    }
 
-    document.getElementById('resDuration').innerText = months + ' M, ' + remainingDays + ' D (' + diffDays + ' Days)';
-    document.getElementById('resInterest').innerText = '₹ ' + totalInterest.toFixed(2);
-    document.getElementById('resTotal').innerText = '₹ ' + totalAmount.toFixed(2);
+    var currentP = origP;
+    var totalInterest = 0;
+    var tableRows = "";
+
+    // Yearly Compounding
+    for (var i = 1; i <= y; i++) {
+        var yearInterest = currentP * (r / 100) * 12;
+        totalInterest += yearInterest;
+        var nextP = currentP + yearInterest;
+
+        tableRows += "<tr>" +
+            "<td>Year " + i + "</td>" +
+            "<td>" + formatINR(yearInterest) + "</td>" +
+            "<td>" + formatINR(totalInterest) + "</td>" +
+            "<td><b>" + formatINR(nextP) + "</b></td>" +
+            "</tr>";
+
+        currentP = nextP;
+    }
+
+    // Remaining Months
+    var monthsInterest = currentP * (r / 100) * m;
+    totalInterest += monthsInterest;
+
+    // Remaining Days Logic: (Current 1M Interest / 30 * days)
+    var cur1MInterest = currentP * (r / 100);
+    var oneDayInterest = cur1MInterest / 30;
+    var daysInterest = oneDayInterest * d;
+    totalInterest += daysInterest;
+
+    var finalAmount = origP + totalInterest;
+    var totalMonthsCount = (y * 12) + m;
+
+    // Update Summary
+    document.getElementById('cmpResPrincipal').innerText = formatINR(origP);
+    document.getElementById('cmpRes1m').innerText = formatINR(origP * (r / 100));
+    document.getElementById('cmpResDuration').innerText = y + "Y " + m + "M " + d + "D (" + totalMonthsCount + " Months)";
+    document.getElementById('cmpResInterest').innerText = formatINR(totalInterest);
+    document.getElementById('cmpResFinal').innerText = formatINR(finalAmount);
+
+    // Extra Days Box
+    var extraDaysBox = document.getElementById('cmpExtraDaysBox');
+    if (d > 0) {
+        document.getElementById('cmpCur1M').innerText = formatINR(cur1MInterest);
+        document.getElementById('cmp1Day').innerText = formatINR(oneDayInterest);
+        document.getElementById('cmpDaysCount').innerText = d;
+        document.getElementById('cmpDaysVal').innerText = formatINR(daysInterest);
+        document.getElementById('cmpTotalIntDays').innerText = formatINR(totalInterest);
+        extraDaysBox.style.display = 'block';
+    } else {
+        extraDaysBox.style.display = 'none';
+    }
+
+    // Table Display
+    var tableBox = document.getElementById('cmpTableBox');
+    if (y > 0) {
+        document.getElementById('cmpTableBody').innerHTML = tableRows;
+        tableBox.style.display = 'block';
+    } else {
+        tableBox.style.display = 'none';
+    }
+
+    document.getElementById('resultsCompound').style.display = 'block';
 }
 
-function resetDateFields() {
-    document.getElementById('principal').value = '';
-    document.getElementById('rate').value = '';
-    document.getElementById('startDate').value = '';
-    document.getElementById('endDate').value = '';
-    document.getElementById('resDuration').innerText = '-';
-    document.getElementById('resInterest').innerText = '₹ 0.00';
-    document.getElementById('resTotal').innerText = '₹ 0.00';
-    hideError('errSection1');
+function resetCompound() {
+    document.getElementById('cmpPrincipal').value = '';
+    document.getElementById('cmpRate').value = '';
+    document.getElementById('cmpStartDate').value = '';
+    document.getElementById('cmpEndDate').value = '';
+    document.getElementById('resultsCompound').style.display = 'none';
+    hideError('errCompound');
 }
 
-function calculateSimpleInterest() {
-    hideError('errSection2');
+// ---------- 2. SIMPLE INTEREST LOGIC ----------
+function calculateSimple() {
+    hideError('errSimple');
 
     var pInput = document.getElementById('simPrincipal').value.trim();
     var rInput = document.getElementById('simRate').value.trim();
     var mInput = document.getElementById('simMonths').value.trim();
+    var dInput = document.getElementById('simDays').value.trim();
 
     if (pInput === "" || rInput === "" || mInput === "") {
-        showError('errSection2', '⚠️ Kripya Section 2 ke saare fields bharein!');
+        showError('errSimple', '⚠️ Kripya Principal, Monthly Rate aur Total Months bharein!');
         return;
     }
 
     var p = parseFloat(pInput);
     var r = parseFloat(rInput);
     var months = parseFloat(mInput);
+    var days = dInput !== "" ? parseFloat(dInput) : 0;
 
-    if (isNaN(p) || isNaN(r) || isNaN(months) || p <= 0 || r <= 0 || months <= 0) {
-        showError('errSection2', '⚠️ Kripya Sahi aur Positive numbers daalein!');
+    if (isNaN(p) || isNaN(r) || isNaN(months) || p <= 0 || r < 0 || months < 0 || days < 0) {
+        showError('errSimple', '⚠️ Kripya Sahi Positive Numbers daalein!');
         return;
     }
 
     var m1Interest = p * (r / 100);
-    var m12Interest = m1Interest * 12;
-    var customInterest = m1Interest * months;
-    var totalAmount = p + customInterest;
+    var monthsInterest = m1Interest * months;
+    var oneDayInterest = m1Interest / 30;
+    var daysInterest = oneDayInterest * days;
 
-    document.getElementById('customMonthLabel').innerText = months;
-    document.getElementById('customMonthTotalLabel').innerText = months;
+    var totalInterest = monthsInterest + daysInterest;
+    var finalAmount = p + totalInterest;
 
-    document.getElementById('sim1Month').innerText = '₹ ' + m1Interest.toFixed(2);
-    document.getElementById('sim12Months').innerText = '₹ ' + m12Interest.toFixed(2);
-    document.getElementById('simCustomInterest').innerText = '₹ ' + customInterest.toFixed(2);
-    document.getElementById('simTotalAmount').innerText = '₹ ' + totalAmount.toFixed(2);
+    // Update Summary
+    document.getElementById('simResPrincipal').innerText = formatINR(p);
+    document.getElementById('simRes1m').innerText = formatINR(m1Interest);
+    document.getElementById('simResDuration').innerText = months + " Months " + (days > 0 ? days + " Days" : "");
+    document.getElementById('simResInterest').innerText = formatINR(totalInterest);
+    document.getElementById('simResFinal').innerText = formatINR(finalAmount);
+
+    // Extra Days Box Simple
+    var extraDaysBox = document.getElementById('simExtraDaysBox');
+    if (days > 0) {
+        document.getElementById('simCur1M').innerText = formatINR(m1Interest);
+        document.getElementById('sim1Day').innerText = formatINR(oneDayInterest);
+        document.getElementById('simDaysCount').innerText = days;
+        document.getElementById('simDaysVal').innerText = formatINR(daysInterest);
+        document.getElementById('simTotalIntDays').innerText = formatINR(totalInterest);
+        extraDaysBox.style.display = 'block';
+    } else {
+        extraDaysBox.style.display = 'none';
+    }
+
+    document.getElementById('resultsSimple').style.display = 'block';
 }
 
-function resetSimpleFields() {
+function resetSimple() {
     document.getElementById('simPrincipal').value = '';
     document.getElementById('simRate').value = '';
     document.getElementById('simMonths').value = '';
-    document.getElementById('customMonthLabel').innerText = '0';
-    document.getElementById('customMonthTotalLabel').innerText = '0';
-    document.getElementById('sim1Month').innerText = '₹ 0.00';
-    document.getElementById('sim12Months').innerText = '₹ 0.00';
-    document.getElementById('simCustomInterest').innerText = '₹ 0.00';
-    document.getElementById('simTotalAmount').innerText = '₹ 0.00';
-    hideError('errSection2');
+    document.getElementById('simDays').value = '';
+    document.getElementById('resultsSimple').style.display = 'none';
+    hideError('errSimple');
 }
 </script>
 
