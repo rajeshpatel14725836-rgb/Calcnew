@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +43,7 @@ body {
     opacity: 0.85;
 }
 
-/* Tab Switching Styles */
+/* Tab Switcher */
 .tab-container {
     display: flex;
     background: #e2e8f0;
@@ -122,6 +122,15 @@ input:focus {
     background: white;
 }
 
+.divider {
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: #64748b;
+    margin: 5px 0;
+}
+
 .error-msg {
     display: none;
     background: #fef2f2;
@@ -160,7 +169,7 @@ button.action-btn {
     color: #334155;
 }
 
-/* Results Section Styling (Matching Screenshot) */
+/* Summary Card Layout */
 .results-container {
     display: none;
     margin-top: 20px;
@@ -193,10 +202,6 @@ button.action-btn {
     color: #172554;
 }
 
-.full-width {
-    flex: 1 1 100%;
-}
-
 .final-box {
     background: #172554;
     color: white;
@@ -215,7 +220,7 @@ button.action-btn {
     font-size: 24px;
 }
 
-/* Extra Days Box Styling */
+/* Extra Days Box */
 .extra-days-box {
     background: #eff6ff;
     border-left: 4px solid #2563eb;
@@ -270,7 +275,7 @@ td {
 <div class="container">
     <div class="header">
         <h1>Interest Calculator</h1>
-        <p>Monthly & Yearly Compounding Calculator</p>
+        <p>Compound & Simple Interest Calculator</p>
     </div>
 
     <!-- TAB SWITCHER -->
@@ -281,7 +286,7 @@ td {
 
     <!-- ================= 1. COMPOUND INTEREST SECTION ================= -->
     <div id="compoundSection" class="card">
-        <div class="title">📈 Compound Interest (Yearly Addition)</div>
+        <div class="title">📈 Compound Interest (Yearly Byaaj Addition)</div>
         
         <div class="input-grid">
             <div class="input-box">
@@ -292,13 +297,26 @@ td {
                 <label>Monthly Rate (%)</label>
                 <input type="number" id="cmpRate" step="0.01" placeholder="e.g. 3.0">
             </div>
+
+            <!-- Date Inputs -->
             <div class="input-box">
                 <label>Start Date</label>
-                <input type="date" id="cmpStartDate">
+                <input type="date" id="cmpStartDate" onchange="clearCmpManual()">
             </div>
             <div class="input-box">
                 <label>End Date</label>
-                <input type="date" id="cmpEndDate">
+                <input type="date" id="cmpEndDate" onchange="clearCmpManual()">
+            </div>
+
+            <div class="divider">--- YA (Direct Months & Days Daalein) ---</div>
+
+            <div class="input-box">
+                <label>Total Months</label>
+                <input type="number" id="cmpMonths" placeholder="e.g. 26" oninput="clearCmpDates()">
+            </div>
+            <div class="input-box">
+                <label>Extra Days (Optional)</label>
+                <input type="number" id="cmpDays" placeholder="e.g. 5" oninput="clearCmpDates()">
             </div>
         </div>
 
@@ -319,7 +337,7 @@ td {
                     <div class="summary-value" id="cmpResPrincipal">₹ 0</div>
                 </div>
                 <div class="summary-box">
-                    <div class="summary-label">1 Month Interest (Initial)</div>
+                    <div class="summary-label">1 Month Interest</div>
                     <div class="summary-value" id="cmpRes1m">₹ 0</div>
                 </div>
                 <div class="summary-box">
@@ -368,7 +386,7 @@ td {
 
     <!-- ================= 2. SIMPLE INTEREST SECTION ================= -->
     <div id="simpleSection" class="card" style="display:none;">
-        <div class="title">📉 Simple Interest (Normal)</div>
+        <div class="title">📉 Simple Interest (Normal Byaaj)</div>
         
         <div class="input-grid">
             <div class="input-box">
@@ -379,13 +397,26 @@ td {
                 <label>Monthly Rate (%)</label>
                 <input type="number" id="simRate" step="0.01" placeholder="e.g. 3.0">
             </div>
+
+            <!-- Date Inputs -->
+            <div class="input-box">
+                <label>Start Date</label>
+                <input type="date" id="simStartDate" onchange="clearSimManual()">
+            </div>
+            <div class="input-box">
+                <label>End Date</label>
+                <input type="date" id="simEndDate" onchange="clearSimManual()">
+            </div>
+
+            <div class="divider">--- YA (Direct Months & Days Daalein) ---</div>
+
             <div class="input-box">
                 <label>Total Months</label>
-                <input type="number" id="simMonths" placeholder="e.g. 12 ya 24">
+                <input type="number" id="simMonths" placeholder="e.g. 12 ya 24" oninput="clearSimDates()">
             </div>
             <div class="input-box">
                 <label>Extra Days (Optional)</label>
-                <input type="number" id="simDays" placeholder="e.g. 5">
+                <input type="number" id="simDays" placeholder="e.g. 5" oninput="clearSimDates()">
             </div>
         </div>
 
@@ -438,7 +469,7 @@ td {
 </div>
 
 <script>
-// ---------- Tab Switcher Function ----------
+// ---------- Tab Switcher ----------
 function switchTab(tab) {
     var cmpTab = document.getElementById('compoundSection');
     var simTab = document.getElementById('simpleSection');
@@ -458,7 +489,24 @@ function switchTab(tab) {
     }
 }
 
-// ---------- Error Helper Functions ----------
+// Input Helpers
+function clearCmpManual() {
+    document.getElementById('cmpMonths').value = '';
+    document.getElementById('cmpDays').value = '';
+}
+function clearCmpDates() {
+    document.getElementById('cmpStartDate').value = '';
+    document.getElementById('cmpEndDate').value = '';
+}
+function clearSimManual() {
+    document.getElementById('simMonths').value = '';
+    document.getElementById('simDays').value = '';
+}
+function clearSimDates() {
+    document.getElementById('simStartDate').value = '';
+    document.getElementById('simEndDate').value = '';
+}
+
 function showError(id, msg) {
     var el = document.getElementById(id);
     el.innerText = msg;
@@ -482,48 +530,64 @@ function calculateCompound() {
     var rInput = document.getElementById('cmpRate').value.trim();
     var startInput = document.getElementById('cmpStartDate').value;
     var endInput = document.getElementById('cmpEndDate').value;
+    var mInput = document.getElementById('cmpMonths').value.trim();
+    var dInput = document.getElementById('cmpDays').value.trim();
 
-    if (pInput === "" || rInput === "" || !startInput || !endInput) {
-        showError('errCompound', '⚠️ Kripya Principal, Monthly Rate, Start Date aur End Date sabhi bharein!');
+    if (pInput === "" || rInput === "") {
+        showError('errCompound', '⚠️ Kripya Principal Amount aur Monthly Rate bharein!');
         return;
     }
 
     var origP = parseFloat(pInput);
     var r = parseFloat(rInput);
-    var start = new Date(startInput);
-    var end = new Date(endInput);
 
     if (isNaN(origP) || isNaN(r) || origP <= 0 || r < 0) {
-        showError('errCompound', '⚠️ Kripya Sahi Positive Principal aur Rate daalein!');
+        showError('errCompound', '⚠️ Kripya Sahi Positive Numbers daalein!');
         return;
     }
 
-    if (end < start) {
-        showError('errCompound', '⚠️ End Date, Start Date se pehle ki nahi ho sakti!');
+    var totalMonths = 0;
+    var extraDays = 0;
+
+    if (startInput && endInput) {
+        var start = new Date(startInput);
+        var end = new Date(endInput);
+        if (end < start) {
+            showError('errCompound', '⚠️ End Date, Start Date se pehle ki nahi ho sakti!');
+            return;
+        }
+        var y = end.getFullYear() - start.getFullYear();
+        var m = end.getMonth() - start.getMonth();
+        var d = end.getDate() - start.getDate();
+
+        if (d < 0) {
+            m--;
+            var prevMonthLastDay = new Date(end.getFullYear(), end.getMonth(), 0).getDate();
+            d += prevMonthLastDay;
+        }
+        if (m < 0) {
+            y--;
+            m += 12;
+        }
+        totalMonths = (y * 12) + m;
+        extraDays = d;
+    } else if (mInput !== "") {
+        totalMonths = parseFloat(mInput);
+        extraDays = dInput !== "" ? parseFloat(dInput) : 0;
+    } else {
+        showError('errCompound', '⚠️ Kripya Start & End Date chunein YA Total Months daalein!');
         return;
     }
 
-    // Date Diff Logic
-    var y = end.getFullYear() - start.getFullYear();
-    var m = end.getMonth() - start.getMonth();
-    var d = end.getDate() - start.getDate();
-
-    if (d < 0) {
-        m--;
-        var prevMonthLastDay = new Date(end.getFullYear(), end.getMonth(), 0).getDate();
-        d += prevMonthLastDay;
-    }
-    if (m < 0) {
-        y--;
-        m += 12;
-    }
+    var years = Math.floor(totalMonths / 12);
+    var remMonths = totalMonths % 12;
 
     var currentP = origP;
     var totalInterest = 0;
     var tableRows = "";
 
-    // Yearly Compounding
-    for (var i = 1; i <= y; i++) {
+    // Yearly Compounding (12 Months Addition)
+    for (var i = 1; i <= years; i++) {
         var yearInterest = currentP * (r / 100) * 12;
         totalInterest += yearInterest;
         var nextP = currentP + yearInterest;
@@ -539,31 +603,30 @@ function calculateCompound() {
     }
 
     // Remaining Months
-    var monthsInterest = currentP * (r / 100) * m;
+    var cur1MInterest = currentP * (r / 100);
+    var monthsInterest = cur1MInterest * remMonths;
     totalInterest += monthsInterest;
 
-    // Remaining Days Logic: (Current 1M Interest / 30 * days)
-    var cur1MInterest = currentP * (r / 100);
+    // Remaining Days
     var oneDayInterest = cur1MInterest / 30;
-    var daysInterest = oneDayInterest * d;
+    var daysInterest = oneDayInterest * extraDays;
     totalInterest += daysInterest;
 
     var finalAmount = origP + totalInterest;
-    var totalMonthsCount = (y * 12) + m;
 
-    // Update Summary
+    // Update Summary Card
     document.getElementById('cmpResPrincipal').innerText = formatINR(origP);
     document.getElementById('cmpRes1m').innerText = formatINR(origP * (r / 100));
-    document.getElementById('cmpResDuration').innerText = y + "Y " + m + "M " + d + "D (" + totalMonthsCount + " Months)";
+    document.getElementById('cmpResDuration').innerText = totalMonths + " Months" + (extraDays > 0 ? " " + extraDays + " Days" : "");
     document.getElementById('cmpResInterest').innerText = formatINR(totalInterest);
     document.getElementById('cmpResFinal').innerText = formatINR(finalAmount);
 
-    // Extra Days Box
+    // Extra Days Box Display
     var extraDaysBox = document.getElementById('cmpExtraDaysBox');
-    if (d > 0) {
+    if (extraDays > 0) {
         document.getElementById('cmpCur1M').innerText = formatINR(cur1MInterest);
         document.getElementById('cmp1Day').innerText = formatINR(oneDayInterest);
-        document.getElementById('cmpDaysCount').innerText = d;
+        document.getElementById('cmpDaysCount').innerText = extraDays;
         document.getElementById('cmpDaysVal').innerText = formatINR(daysInterest);
         document.getElementById('cmpTotalIntDays').innerText = formatINR(totalInterest);
         extraDaysBox.style.display = 'block';
@@ -571,9 +634,9 @@ function calculateCompound() {
         extraDaysBox.style.display = 'none';
     }
 
-    // Table Display
+    // Breakdown Table Display
     var tableBox = document.getElementById('cmpTableBox');
-    if (y > 0) {
+    if (years > 0) {
         document.getElementById('cmpTableBody').innerHTML = tableRows;
         tableBox.style.display = 'block';
     } else {
@@ -588,6 +651,8 @@ function resetCompound() {
     document.getElementById('cmpRate').value = '';
     document.getElementById('cmpStartDate').value = '';
     document.getElementById('cmpEndDate').value = '';
+    document.getElementById('cmpMonths').value = '';
+    document.getElementById('cmpDays').value = '';
     document.getElementById('resultsCompound').style.display = 'none';
     hideError('errCompound');
 }
@@ -598,45 +663,78 @@ function calculateSimple() {
 
     var pInput = document.getElementById('simPrincipal').value.trim();
     var rInput = document.getElementById('simRate').value.trim();
+    var startInput = document.getElementById('simStartDate').value;
+    var endInput = document.getElementById('simEndDate').value;
     var mInput = document.getElementById('simMonths').value.trim();
     var dInput = document.getElementById('simDays').value.trim();
 
-    if (pInput === "" || rInput === "" || mInput === "") {
-        showError('errSimple', '⚠️ Kripya Principal, Monthly Rate aur Total Months bharein!');
+    if (pInput === "" || rInput === "") {
+        showError('errSimple', '⚠️ Kripya Principal Amount aur Monthly Rate bharein!');
         return;
     }
 
     var p = parseFloat(pInput);
     var r = parseFloat(rInput);
-    var months = parseFloat(mInput);
-    var days = dInput !== "" ? parseFloat(dInput) : 0;
 
-    if (isNaN(p) || isNaN(r) || isNaN(months) || p <= 0 || r < 0 || months < 0 || days < 0) {
+    if (isNaN(p) || isNaN(r) || p <= 0 || r < 0) {
         showError('errSimple', '⚠️ Kripya Sahi Positive Numbers daalein!');
         return;
     }
 
+    var totalMonths = 0;
+    var extraDays = 0;
+
+    if (startInput && endInput) {
+        var start = new Date(startInput);
+        var end = new Date(endInput);
+        if (end < start) {
+            showError('errSimple', '⚠️ End Date, Start Date se pehle ki nahi ho sakti!');
+            return;
+        }
+        var y = end.getFullYear() - start.getFullYear();
+        var m = end.getMonth() - start.getMonth();
+        var d = end.getDate() - start.getDate();
+
+        if (d < 0) {
+            m--;
+            var prevMonthLastDay = new Date(end.getFullYear(), end.getMonth(), 0).getDate();
+            d += prevMonthLastDay;
+        }
+        if (m < 0) {
+            y--;
+            m += 12;
+        }
+        totalMonths = (y * 12) + m;
+        extraDays = d;
+    } else if (mInput !== "") {
+        totalMonths = parseFloat(mInput);
+        extraDays = dInput !== "" ? parseFloat(dInput) : 0;
+    } else {
+        showError('errSimple', '⚠️ Kripya Start & End Date chunein YA Total Months daalein!');
+        return;
+    }
+
     var m1Interest = p * (r / 100);
-    var monthsInterest = m1Interest * months;
+    var monthsInterest = m1Interest * totalMonths;
     var oneDayInterest = m1Interest / 30;
-    var daysInterest = oneDayInterest * days;
+    var daysInterest = oneDayInterest * extraDays;
 
     var totalInterest = monthsInterest + daysInterest;
     var finalAmount = p + totalInterest;
 
-    // Update Summary
+    // Update Summary Card
     document.getElementById('simResPrincipal').innerText = formatINR(p);
     document.getElementById('simRes1m').innerText = formatINR(m1Interest);
-    document.getElementById('simResDuration').innerText = months + " Months " + (days > 0 ? days + " Days" : "");
+    document.getElementById('simResDuration').innerText = totalMonths + " Months" + (extraDays > 0 ? " " + extraDays + " Days" : "");
     document.getElementById('simResInterest').innerText = formatINR(totalInterest);
     document.getElementById('simResFinal').innerText = formatINR(finalAmount);
 
-    // Extra Days Box Simple
+    // Extra Days Box Display
     var extraDaysBox = document.getElementById('simExtraDaysBox');
-    if (days > 0) {
+    if (extraDays > 0) {
         document.getElementById('simCur1M').innerText = formatINR(m1Interest);
         document.getElementById('sim1Day').innerText = formatINR(oneDayInterest);
-        document.getElementById('simDaysCount').innerText = days;
+        document.getElementById('simDaysCount').innerText = extraDays;
         document.getElementById('simDaysVal').innerText = formatINR(daysInterest);
         document.getElementById('simTotalIntDays').innerText = formatINR(totalInterest);
         extraDaysBox.style.display = 'block';
@@ -650,6 +748,8 @@ function calculateSimple() {
 function resetSimple() {
     document.getElementById('simPrincipal').value = '';
     document.getElementById('simRate').value = '';
+    document.getElementById('simStartDate').value = '';
+    document.getElementById('simEndDate').value = '';
     document.getElementById('simMonths').value = '';
     document.getElementById('simDays').value = '';
     document.getElementById('resultsSimple').style.display = 'none';
