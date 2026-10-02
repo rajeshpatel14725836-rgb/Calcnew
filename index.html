@@ -3,244 +3,387 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Interest & Date Calculator</title>
 
 <meta name="theme-color" content="#172554">
 <meta name="description" content="Monthly Interest and Date Difference Calculator">
 
-<link rel="manifest" href="./manifest.json">
-
 <style>
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: linear-gradient(135deg, #eef2ff, #f8fafc 50%, #e0f2fe);
+    margin: 0;
+    padding: 15px 10px 35px;
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
     color: #172033;
-    min-height: 100vh;
-    padding: 20px 12px 40px;
 }
 
 .container {
-    width: 100%;
     max-width: 900px;
     margin: auto;
 }
 
 .header {
-    background: linear-gradient(135deg, #172554, #1e3a8a);
+    background: #172554;
     color: white;
-    padding: 25px 20px;
-    border-radius: 20px;
     text-align: center;
-    margin-bottom: 18px;
-    box-shadow: 0 12px 30px rgba(23,37,84,.20);
+    padding: 24px 15px;
+    border-radius: 18px;
+    margin-bottom: 16px;
 }
 
 .header h1 {
-    font-size: 27px;
-    margin-bottom: 7px;
+    margin: 0 0 7px;
+    font-size: 26px;
 }
 
 .header p {
+    margin: 0;
     font-size: 14px;
-    opacity: .88;
+    opacity: 0.85;
 }
 
 .card {
-    background: rgba(255,255,255,.96);
-    border-radius: 18px;
-    padding: 20px;
-    margin-bottom: 18px;
-    box-shadow: 0 8px 25px rgba(15,23,42,.08);
-    border: 1px solid #e5e7eb;
+    background: white;
+    padding: 18px;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.07);
 }
 
-.section-title {
+.title {
     font-size: 19px;
-    font-weight: 700;
+    font-weight: bold;
     color: #172554;
-    margin-bottom: 17px;
+    margin-bottom: 16px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 8px;
 }
 
 .input-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
 }
 
-.date-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
-.field label {
+label {
     display: block;
     font-size: 13px;
-    font-weight: 700;
-    margin-bottom: 7px;
-    color: #475569;
-}
-
-.input-wrap {
-    position: relative;
-}
-
-.input-wrap span {
-    position: absolute;
-    left: 13px;
-    top: 50%;
-    transform: translateY(-50%);
     font-weight: bold;
-    color: #64748b;
+    color: #475569;
+    margin-bottom: 6px;
 }
 
-.input-wrap input {
+input {
     width: 100%;
-    padding: 13px;
-    border: 1.5px solid #cbd5e1;
-    border-radius: 11px;
-    outline: none;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
     font-size: 16px;
     background: #f8fafc;
+    outline: none;
 }
 
-.input-wrap input.money {
-    padding-left: 35px;
-}
-
-.input-wrap input:focus {
+input:focus {
     border-color: #2563eb;
     background: white;
-    box-shadow: 0 0 0 3px rgba(37,99,235,.10);
 }
 
 .buttons {
     display: flex;
-    gap: 12px;
-    margin-top: 20px;
+    gap: 10px;
+    margin-top: 17px;
 }
 
 button {
     flex: 1;
-    border: none;
-    padding: 14px;
-    border-radius: 11px;
+    border: 0;
+    border-radius: 9px;
+    padding: 13px;
     font-size: 15px;
-    font-weight: 700;
+    font-weight: bold;
     cursor: pointer;
+    transition: 0.2s;
 }
 
-.calculate-btn {
+.calculate {
     background: #172554;
     color: white;
 }
 
-.reset-btn {
+.calculate:hover {
+    background: #1e3a8a;
+}
+
+.reset {
     background: #e2e8f0;
     color: #334155;
+}
+
+.reset:hover {
+    background: #cbd5e1;
 }
 
 .summary-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 10px;
+    margin-top: 15px;
 }
 
-.summary-box {
-    padding: 16px;
+.summary {
     background: #f8fafc;
     border: 1px solid #e2e8f0;
-    border-radius: 13px;
+    border-radius: 10px;
+    padding: 14px;
 }
 
-.summary-box .label {
+.summary-label {
     font-size: 12px;
     color: #64748b;
     margin-bottom: 5px;
 }
 
-.summary-box .value {
-    font-size: 19px;
-    font-weight: 800;
+.summary-value {
+    font-size: 18px;
+    font-weight: bold;
     color: #172554;
 }
 
-.final-box {
-    background: linear-gradient(135deg, #172554, #1e40af);
-    color: white;
-    border: none;
-}
-
-.final-box .label,
-.final-box .value {
+.final {
+    grid-column: 1 / -1;
+    background: #172554;
     color: white;
 }
 
-.final-box .value {
+.final .summary-label,
+.final .summary-value {
+    color: white;
+}
+
+.final .summary-value {
     font-size: 23px;
 }
 
-.table-wrapper {
-    overflow-x: auto;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-}
-
-table {
-    width: 100%;
-    min-width: 850px;
-    border-collapse: collapse;
-    background: white;
-}
-
-th {
-    background: #172554;
-    color: white;
-    padding: 12px 10px;
-    font-size: 12px;
-    text-align: center;
-    white-space: nowrap;
-}
-
-td {
-    padding: 12px 10px;
-    border-bottom: 1px solid #e5e7eb;
-    text-align: center;
-    font-size: 13px;
-    white-space: nowrap;
-}
-
-tr:nth-child(even) {
-    background: #f8fafc;
-}
-
-.period-number {
-    font-weight: 800;
-    color: #1e3a8a;
-}
-
-.new-principal {
-    font-weight: 800;
-    color: #166534;
-}
-
-.empty-message {
-    text-align: center;
-    color: #94a3b8;
-    padding: 25px 10px;
-}
-
-.extra-days-box {
-    margin-top: 16px;
-    padding: 15px;
+.highlight-box {
     background: #eff6ff;
-    border-left: 4px solid #2563eb;
-    border-radius: 9px;
-    font-size:
+    border: 1px dashed #2563eb;
+}
+.highlight-box .summary-value {
+    color: #1d4ed8;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Interest & Date Calculator</h1>
+        <p>Monthly Interest and Date Difference Calculator</p>
+    </div>
+
+    <!-- ================= SECTION 1: DATE TO DATE CALCULATOR ================= -->
+    <div class="card">
+        <div class="title">1. Date-to-Date Interest Calculator</div>
+        <div class="input-grid">
+            <div>
+                <label>Principal Amount (₹)</label>
+                <input type="number" id="principal" placeholder="e.g. 50000">
+            </div>
+            <div>
+                <label>Monthly Rate (%)</label>
+                <input type="number" id="rate" step="0.01" placeholder="e.g. 2.0">
+            </div>
+            <div>
+                <label>Start Date</label>
+                <input type="date" id="startDate">
+            </div>
+            <div>
+                <label>End Date</label>
+                <input type="date" id="endDate">
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="calculate" onclick="calculateDateInterest()">Calculate Date Interest</button>
+            <button class="reset" onclick="resetDateFields()">Reset</button>
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary">
+                <div class="summary-label">Total Duration</div>
+                <div class="summary-value" id="resDuration">-</div>
+            </div>
+            <div class="summary">
+                <div class="summary-label">Total Interest</div>
+                <div class="summary-value" id="resInterest">₹ 0.00</div>
+            </div>
+            <div class="summary final">
+                <div class="summary-label">Total Payable Amount</div>
+                <div class="summary-value" id="resTotal">₹ 0.00</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= SECTION 2: SIMPLE MONTHLY CALCULATOR ================= -->
+    <div class="card">
+        <div class="title">2. Simple Monthly Interest Calculator (Mahine ke Hisab Se)</div>
+        <div class="input-grid">
+            <div>
+                <label>Principal Amount (₹)</label>
+                <input type="number" id="simPrincipal" placeholder="e.g. 10000">
+            </div>
+            <div>
+                <label>Monthly Rate (%)</label>
+                <input type="number" id="simRate" step="0.01" placeholder="e.g. 3.0">
+            </div>
+            <div>
+                <label>Total Months</label>
+                <input type="number" id="simMonths" placeholder="e.g. 24">
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="calculate" onclick="calculateSimpleInterest()">Calculate Interest</button>
+            <button class="reset" onclick="resetSimpleFields()">Reset</button>
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary highlight-box">
+                <div class="summary-label">1 Month Interest (1 Mahina)</div>
+                <div class="summary-value" id="sim1Month">₹ 0.00</div>
+            </div>
+            <div class="summary highlight-box">
+                <div class="summary-label">12 Months Interest (1 Saal)</div>
+                <div class="summary-value" id="sim12Months">₹ 0.00</div>
+            </div>
+            <div class="summary">
+                <div class="summary-label"><span id="customMonthLabel">0</span> Months Interest</div>
+                <div class="summary-value" id="simCustomInterest">₹ 0.00</div>
+            </div>
+            <div class="summary final">
+                <div class="summary-label">Total Payable Amount (<span id="customMonthTotalLabel">0</span> Months)</div>
+                <div class="summary-value" id="simTotalAmount">₹ 0.00</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// ---------- Section 1 Logic: Date-to-Date Calculator ----------
+function calculateDateInterest() {
+    const pInput = document.getElementById('principal').value.trim();
+    const rInput = document.getElementById('rate').value.trim();
+    const startInput = document.getElementById('startDate').value;
+    const endInput = document.getElementById('endDate').value;
+
+    if (pInput === "" || rInput === "" || !startInput || !endInput) {
+        alert("⚠️ Error: Section 1 ke sabhi fields bharna zaroori hai!");
+        return;
+    }
+
+    const p = parseFloat(pInput);
+    const r = parseFloat(rInput);
+    const start = new Date(startInput);
+    const end = new Date(endInput);
+
+    if (isNaN(p) || isNaN(r) || p <= 0 || r < 0) {
+        alert("⚠️ Error: Kripya Principal Amount aur Rate sahi daalein!");
+        return;
+    }
+
+    if (end < start) {
+        alert("⚠️ Error: End Date, Start Date se pehle ki nahi ho sakti!");
+        return;
+    }
+
+    const diffTime = Math.abs(end - start);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    // Daily Interest based on monthly rate / 30
+    const dailyInterest = (p * r / 100) / 30;
+    const totalInterest = dailyInterest * diffDays;
+    const totalAmount = p + totalInterest;
+
+    const months = Math.floor(diffDays / 30);
+    const remainingDays = diffDays % 30;
+
+    document.getElementById('resDuration').innerText = `${months} M, ${remainingDays} D (${diffDays} Days)`;
+    document.getElementById('resInterest').innerText = '₹ ' + totalInterest.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.getElementById('resTotal').innerText = '₹ ' + totalAmount.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+
+function resetDateFields() {
+    document.getElementById('principal').value = '';
+    document.getElementById('rate').value = '';
+    document.getElementById('startDate').value = '';
+    document.getElementById('endDate').value = '';
+    document.getElementById('resDuration').innerText = '-';
+    document.getElementById('resInterest').innerText = '₹ 0.00';
+    document.getElementById('resTotal').innerText = '₹ 0.00';
+}
+
+// ---------- Section 2 Logic: Simple Monthly Interest Calculator ----------
+function calculateSimpleInterest() {
+    const pInput = document.getElementById('simPrincipal').value.trim();
+    const rInput = document.getElementById('simRate').value.trim();
+    const mInput = document.getElementById('simMonths').value.trim();
+
+    // Check for Blank / Empty Fields
+    if (pInput === "" || rInput === "" || mInput === "") {
+        alert("⚠️ Error: Kripya Section 2 ke saare fields (Principal Amount, Monthly Rate, Total Months) bharein!");
+        return;
+    }
+
+    const p = parseFloat(pInput);
+    const r = parseFloat(rInput);
+    const months = parseFloat(mInput);
+
+    // Validation for Invalid numbers
+    if (isNaN(p) || isNaN(r) || isNaN(months) || p <= 0 || r <= 0 || months <= 0) {
+        alert("⚠️ Error: Kripya Sahi aur Positive numbers daalein!");
+        return;
+    }
+
+    // 1 Month interest = P * (R / 100)
+    const m1Interest = p * (r / 100);
+    
+    // 12 Months (1 Year) interest
+    const m12Interest = m1Interest * 12;
+    
+    // Custom Months Interest
+    const customInterest = m1Interest * months;
+    
+    // Total Amount
+    const totalAmount = p + customInterest;
+
+    // Update Month Labels
+    document.getElementById('customMonthLabel').innerText = months;
+    document.getElementById('customMonthTotalLabel').innerText = months;
+
+    // Update Result Amounts
+    document.getElementById('sim1Month').innerText = '₹ ' + m1Interest.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.getElementById('sim12Months').innerText = '₹ ' + m12Interest.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.getElementById('simCustomInterest').innerText = '₹ ' + customInterest.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.getElementById('simTotalAmount').innerText = '₹ ' + totalAmount.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+
+function resetSimpleFields() {
+    document.getElementById('simPrincipal').value = '';
+    document.getElementById('simRate').value = '';
+    document.getElementById('simMonths').value = '';
+    document.getElementById('customMonthLabel').innerText = '0';
+    document.getElementById('customMonthTotalLabel').innerText = '0';
+    document.getElementById('sim1Month').innerText = '₹ 0.00';
+    document.getElementById('sim12Months').innerText = '₹ 0.00';
+    document.getElementById('simCustomInterest').innerText = '₹ 0.00';
+    document.getElementById('simTotalAmount').innerText = '₹ 0.00';
+}
+</script>
+
+</body>
+</html>
