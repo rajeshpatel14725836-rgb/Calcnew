@@ -1,0 +1,1197 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Interest & Date Calculator</title><meta name="theme-color" content="#172554">
+<meta name="description" content="Monthly Interest and Date Difference Calculator"><link rel="manifest" href="./manifest.json"><style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #eef2ff, #f8fafc 50%, #e0f2fe);
+    color: #172033;
+    min-height: 100vh;
+    padding: 20px 12px 40px;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+}
+
+.header {
+    background: linear-gradient(135deg, #172554, #1e3a8a);
+    color: white;
+    padding: 25px 20px;
+    border-radius: 20px;
+    text-align: center;
+    margin-bottom: 18px;
+    box-shadow: 0 12px 30px rgba(23,37,84,.20);
+}
+
+.header h1 {
+    font-size: 27px;
+    margin-bottom: 7px;
+}
+
+.header p {
+    font-size: 14px;
+    opacity: .88;
+}
+
+.card {
+    background: rgba(255,255,255,.96);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 8px 25px rgba(15,23,42,.08);
+    border: 1px solid #e5e7eb;
+}
+
+.section-title {
+    font-size: 19px;
+    font-weight: 700;
+    color: #172554;
+    margin-bottom: 17px;
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.date-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 7px;
+    color: #475569;
+}
+
+.input-wrap {
+    position: relative;
+}
+
+.input-wrap span {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: bold;
+    color: #64748b;
+}
+
+.input-wrap input {
+    width: 100%;
+    padding: 13px;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 11px;
+    outline: none;
+    font-size: 16px;
+    background: #f8fafc;
+}
+
+.input-wrap input.money {
+    padding-left: 35px;
+}
+
+.input-wrap input:focus {
+    border-color: #2563eb;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(37,99,235,.10);
+}
+
+.buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+button {
+    flex: 1;
+    border: none;
+    padding: 14px;
+    border-radius: 11px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.calculate-btn {
+    background: #172554;
+    color: white;
+}
+
+.reset-btn {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.summary-box {
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 13px;
+}
+
+.summary-box .label {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 5px;
+}
+
+.summary-box .value {
+    font-size: 19px;
+    font-weight: 800;
+    color: #172554;
+}
+
+.final-box {
+    background: linear-gradient(135deg, #172554, #1e40af);
+    color: white;
+    border: none;
+}
+
+.final-box .label,
+.final-box .value {
+    color: white;
+}
+
+.final-box .value {
+    font-size: 23px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+table {
+    width: 100%;
+    min-width: 850px;
+    border-collapse: collapse;
+    background: white;
+}
+
+th {
+    background: #172554;
+    color: white;
+    padding: 12px 10px;
+    font-size: 12px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.period-number {
+    font-weight: 800;
+    color: #1e3a8a;
+}
+
+.new-principal {
+    font-weight: 800;
+    color: #166534;
+}
+
+.empty-message {
+    text-align: center;
+    color: #94a3b8;
+    padding: 25px 10px;
+}
+
+.rule-box {
+    background: #f8fafc;
+    border-left: 4px solid #172554;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #475569;
+}
+
+.date-result {
+    margin-top: 18px;
+}
+
+.big-result {
+    background: linear-gradient(135deg, #172554, #1e40af);
+    color: white;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+}
+
+.big-result .result-label {
+    font-size: 13px;
+    opacity: .85;
+    margin-bottom: 7px;
+}
+
+.big-result .days {
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.big-result .detail {
+    margin-top: 8px;
+    font-size: 14px;
+    opacity: .9;
+}
+
+.popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 999;
+}
+
+.popup {
+    background: white;
+    width: 100%;
+    max-width: 360px;
+    border-radius: 18px;
+    padding: 25px;
+    text-align: center;
+}
+
+.popup-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    background: #fee2e2;
+    color: #dc2626;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.popup h3 {
+    margin-bottom: 7px;
+}
+
+.popup p {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 18px;
+}
+
+.popup button {
+    width: 100%;
+    background: #172554;
+    color: white;
+}
+
+.footer {
+    text-align: center;
+    color: #64748b;
+    font-size: 12px;
+    margin-top: 20px;
+}
+
+@media (max-width: 700px) {
+
+    body {
+        padding: 12px 9px 30px;
+    }
+
+    .header {
+        padding: 22px 15px;
+    }
+
+    .header h1 {
+        font-size: 23px;
+    }
+
+    .card {
+        padding: 16px;
+    }
+
+    .input-grid,
+    .date-grid {
+        grid-template-columns: 1fr;
+        gap: 13px;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+    }
+
+    .summary-box {
+        padding: 13px 11px;
+    }
+
+    .summary-box .value {
+        font-size: 16px;
+    }
+
+    .final-box .value {
+        font-size: 19px;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+}
+</style></head><body><div class="container"><div class="header">
+    <h1>Interest & Date Calculator</h1>
+    <p>Monthly Interest + Date Difference Calculator</p>
+</div><!-- MONTHLY INTEREST CALCULATOR --><div class="card"><div class="section-title">💰 Monthly Interest Calculator</div>
+
+<div class="input-grid">
+
+    <div class="field">
+        <label>Principal Amount</label>
+
+        <div class="input-wrap">
+            <span>₹</span>
+
+            <input
+                type="number"
+                id="principal"
+                class="money"
+                placeholder="10000"
+                min="0">
+        </div>
+    </div>
+
+    <div class="field">
+
+        <label>Monthly Interest Rate (%)</label>
+
+        <div class="input-wrap">
+
+            <input
+                type="number"
+                id="rate"
+                placeholder="3"
+                min="0"
+                step="0.01">
+
+        </div>
+    </div>
+
+    <div class="field">
+
+        <label>Total Months</label>
+
+        <div class="input-wrap">
+
+            <input
+                type="number"
+                id="months"
+                placeholder="25"
+                min="1"
+                step="1">
+
+        </div>
+    </div>
+
+</div>
+
+<div class="buttons">
+
+    <button
+        class="calculate-btn"
+        onclick="calculateInterest()">
+        Calculate
+    </button>
+
+    <button
+        class="reset-btn"
+        onclick="resetInterest()">
+        Reset
+    </button>
+
+</div>
+
+</div><div class="card"><div class="section-title">📊 Interest Summary</div>
+
+<div class="summary-grid">
+
+    <div class="summary-box">
+        <div class="label">Principal Amount</div>
+        <div class="value" id="summaryPrincipal">₹0</div>
+    </div>
+
+    <div class="summary-box">
+        <div class="label">1 Month Interest</div>
+        <div class="value" id="summaryMonthly">₹0</div>
+    </div>
+
+    <div class="summary-box">
+        <div class="label">Total Months</div>
+        <div class="value" id="summaryMonths">0</div>
+    </div>
+
+    <div class="summary-box">
+        <div class="label">Total Interest</div>
+        <div class="value" id="summaryInterest">₹0</div>
+    </div>
+
+    <div
+        class="summary-box final-box"
+        style="grid-column:1/-1">
+
+        <div class="label">Final Amount</div>
+
+        <div
+            class="value"
+            id="summaryFinal">
+            ₹0
+        </div>
+
+    </div>
+
+</div>
+
+</div><div class="card"><div class="section-title">
+    📋 Period-wise Interest Breakdown
+</div>
+
+<div class="table-wrapper">
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Period</th>
+                <th>Principal Amount</th>
+                <th>Using Amount</th>
+                <th>1 Month Interest</th>
+                <th>Months</th>
+                <th>Period Interest</th>
+                <th>Total Interest</th>
+                <th>New Principal</th>
+            </tr>
+
+        </thead>
+
+        <tbody id="resultTable">
+
+            <tr>
+                <td colspan="8" class="empty-message">
+                    Enter details and press Calculate
+                </td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</div><!-- DATE CALCULATOR --><div class="card"><div class="section-title">
+    📅 Date Difference Calculator
+</div>
+
+<div class="date-grid">
+
+    <div class="field">
+
+        <label>Start Date</label>
+
+        <div class="input-wrap">
+
+            <input
+                type="date"
+                id="startDate">
+
+        </div>
+
+    </div>
+
+
+    <div class="field">
+
+        <label>End Date</label>
+
+        <div class="input-wrap">
+
+            <input
+                type="date"
+                id="endDate">
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="buttons">
+
+    <button
+        class="calculate-btn"
+        onclick="calculateDateDifference()">
+        Calculate Days
+    </button>
+
+    <button
+        class="reset-btn"
+        onclick="resetDateCalculator()">
+        Reset
+    </button>
+
+</div>
+
+
+<div
+    class="date-result"
+    id="dateResult"
+    style="display:none;">
+
+    <div class="big-result">
+
+        <div class="result-label">
+            Difference Between Dates
+        </div>
+
+        <div
+            class="days"
+            id="differenceDays">
+            0 Days
+        </div>
+
+        <div
+            class="detail"
+            id="differenceDetail">
+        </div>
+
+    </div>
+
+</div>
+
+</div><div class="card"><div class="section-title">
+    ℹ️ Calculation Rules
+</div>
+
+<div class="rule-box">
+
+    <strong>Interest:</strong>
+    Interest is calculated monthly.
+    Every 12 completed months, that period's interest is added
+    to the principal and becomes the new principal for the next period.
+    Remaining months use the latest principal.
+
+    <br><br>
+
+    <strong>Date:</strong>
+    The Date Calculator calculates the actual calendar-day difference
+    between the selected dates.
+
+</div>
+
+</div><div class="footer">
+    Interest & Date Calculator
+</div></div><!-- POPUP --><div
+    class="popup-overlay"
+    id="popupOverlay"><div class="popup">
+
+    <div class="popup-icon">
+        !
+    </div>
+
+    <h3>
+        Invalid Input
+    </h3>
+
+    <p id="popupMessage">
+        Please enter all required details.
+    </p>
+
+    <button onclick="closePopup()">
+        OK
+    </button>
+
+</div>
+
+</div><script>
+
+/* =========================
+   MONEY FORMAT
+========================= */
+
+function formatMoney(number) {
+
+    return "₹" + number.toLocaleString("en-IN", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+    });
+
+}
+
+
+/* =========================
+   POPUP
+========================= */
+
+function showPopup(message) {
+
+    document.getElementById("popupMessage").innerText = message;
+
+    document.getElementById("popupOverlay").style.display = "flex";
+
+}
+
+
+function closePopup() {
+
+    document.getElementById("popupOverlay").style.display = "none";
+
+}
+
+
+/* =========================
+   INTEREST CALCULATOR
+========================= */
+
+function calculateInterest() {
+
+    const principalInput =
+        document.getElementById("principal").value.trim();
+
+    const rateInput =
+        document.getElementById("rate").value.trim();
+
+    const monthsInput =
+        document.getElementById("months").value.trim();
+
+
+    if (principalInput === "") {
+
+        showPopup("Please enter Principal Amount.");
+
+        return;
+    }
+
+
+    if (rateInput === "") {
+
+        showPopup("Please enter Monthly Interest Rate.");
+
+        return;
+    }
+
+
+    if (monthsInput === "") {
+
+        showPopup("Please enter Total Months.");
+
+        return;
+    }
+
+
+    const principal = Number(principalInput);
+    const rate = Number(rateInput);
+    const totalMonths = Number(monthsInput);
+
+
+    if (!Number.isFinite(principal) || principal <= 0) {
+
+        showPopup(
+            "Principal Amount must be greater than 0."
+        );
+
+        return;
+    }
+
+
+    if (!Number.isFinite(rate) || rate < 0) {
+
+        showPopup(
+            "Monthly Interest Rate cannot be negative."
+        );
+
+        return;
+    }
+
+
+    if (
+        !Number.isFinite(totalMonths) ||
+        totalMonths <= 0 ||
+        !Number.isInteger(totalMonths)
+    ) {
+
+        showPopup(
+            "Total Months must be a whole number greater than 0."
+        );
+
+        return;
+    }
+
+
+    let usingAmount = principal;
+
+    let totalInterest = 0;
+
+    let remainingMonths = totalMonths;
+
+    let period = 1;
+
+    let tableHTML = "";
+
+
+    const firstMonthInterest =
+        usingAmount * rate / 100;
+
+
+    while (remainingMonths > 0) {
+
+        const periodMonths =
+            Math.min(12, remainingMonths);
+
+
+        const monthInterest =
+            usingAmount * rate / 100;
+
+
+        const periodInterest =
+            monthInterest * periodMonths;
+
+
+        totalInterest += periodInterest;
+
+
+        const isCompleteYear =
+            periodMonths === 12;
+
+
+        let newPrincipal = null;
+
+
+        if (isCompleteYear) {
+
+            newPrincipal =
+                usingAmount + periodInterest;
+
+        }
+
+
+        tableHTML += `
+
+            <tr>
+
+                <td class="period-number">
+                    ${period}
+                </td>
+
+                <td>
+                    ${formatMoney(principal)}
+                </td>
+
+                <td>
+                    ${formatMoney(usingAmount)}
+                </td>
+
+                <td>
+                    ${formatMoney(monthInterest)}
+                </td>
+
+                <td>
+                    ${periodMonths}
+                </td>
+
+                <td>
+                    ${formatMoney(periodInterest)}
+                </td>
+
+                <td>
+                    ${formatMoney(totalInterest)}
+                </td>
+
+                <td class="new-principal">
+
+                    ${
+                        newPrincipal !== null
+                        ? formatMoney(newPrincipal)
+                        : "—"
+                    }
+
+                </td>
+
+            </tr>
+
+        `;
+
+
+        if (isCompleteYear) {
+
+            usingAmount = newPrincipal;
+
+        }
+
+
+        remainingMonths -= periodMonths;
+
+        period++;
+
+    }
+
+
+    const finalAmount =
+        principal + totalInterest;
+
+
+    document.getElementById(
+        "summaryPrincipal"
+    ).innerText =
+        formatMoney(principal);
+
+
+    document.getElementById(
+        "summaryMonthly"
+    ).innerText =
+        formatMoney(firstMonthInterest);
+
+
+    document.getElementById(
+        "summaryMonths"
+    ).innerText =
+        totalMonths + " Months";
+
+
+    document.getElementById(
+        "summaryInterest"
+    ).innerText =
+        formatMoney(totalInterest);
+
+
+    document.getElementById(
+        "summaryFinal"
+    ).innerText =
+        formatMoney(finalAmount);
+
+
+    document.getElementById(
+        "resultTable"
+    ).innerHTML =
+        tableHTML;
+
+}
+
+
+/* =========================
+   RESET INTEREST
+========================= */
+
+function resetInterest() {
+
+    document.getElementById("principal").value = "";
+
+    document.getElementById("rate").value = "";
+
+    document.getElementById("months").value = "";
+
+
+    document.getElementById(
+        "summaryPrincipal"
+    ).innerText = "₹0";
+
+
+    document.getElementById(
+        "summaryMonthly"
+    ).innerText = "₹0";
+
+
+    document.getElementById(
+        "summaryMonths"
+    ).innerText = "0";
+
+
+    document.getElementById(
+        "summaryInterest"
+    ).innerText = "₹0";
+
+
+    document.getElementById(
+        "summaryFinal"
+    ).innerText = "₹0";
+
+
+    document.getElementById(
+        "resultTable"
+    ).innerHTML = `
+
+        <tr>
+
+            <td
+                colspan="8"
+                class="empty-message">
+
+                Enter details and press Calculate
+
+            </td>
+
+        </tr>
+
+    `;
+
+}
+
+
+/* =========================
+   DATE DIFFERENCE
+========================= */
+
+function calculateDateDifference() {
+
+    const startValue =
+        document.getElementById("startDate").value;
+
+    const endValue =
+        document.getElementById("endDate").value;
+
+
+    if (startValue === "") {
+
+        showPopup("Please select Start Date.");
+
+        return;
+    }
+
+
+    if (endValue === "") {
+
+        showPopup("Please select End Date.");
+
+        return;
+    }
+
+
+    const startParts =
+        startValue.split("-").map(Number);
+
+    const endParts =
+        endValue.split("-").map(Number);
+
+
+    const start =
+        new Date(
+            startParts[0],
+            startParts[1] - 1,
+            startParts[2]
+        );
+
+
+    const end =
+        new Date(
+            endParts[0],
+            endParts[1] - 1,
+            endParts[2]
+        );
+
+
+    if (end < start) {
+
+        showPopup(
+            "End Date must be on or after Start Date."
+        );
+
+        return;
+    }
+
+
+    const millisecondsPerDay =
+        24 * 60 * 60 * 1000;
+
+
+    const difference =
+        Math.round(
+            (end - start) / millisecondsPerDay
+        );
+
+
+    document.getElementById(
+        "differenceDays"
+    ).innerText =
+        difference + " Days";
+
+
+    let years =
+        end.getFullYear() -
+        start.getFullYear();
+
+
+    let months =
+        end.getMonth() -
+        start.getMonth();
+
+
+    let days =
+        end.getDate() -
+        start.getDate();
+
+
+    if (days < 0) {
+
+        months--;
+
+        const previousMonth =
+            new Date(
+                end.getFullYear(),
+                end.getMonth(),
+                0
+            );
+
+        days += previousMonth.getDate();
+
+    }
+
+
+    if (months < 0) {
+
+        years--;
+
+        months += 12;
+
+    }
+
+
+    let detailText = "";
+
+
+    if (years > 0) {
+
+        detailText +=
+            years +
+            (years === 1 ? " Year " : " Years ");
+
+    }
+
+
+    if (months > 0) {
+
+        detailText +=
+            months +
+            (months === 1 ? " Month " : " Months ");
+
+    }
+
+
+    if (days > 0) {
+
+        detailText +=
+            days +
+            (days === 1 ? " Day" : " Days");
+
+    }
+
+
+    if (detailText.trim() === "") {
+
+        detailText = "Same Date";
+
+    }
+
+
+    document.getElementById(
+        "differenceDetail"
+    ).innerText =
+        detailText;
+
+
+    document.getElementById(
+        "dateResult"
+    ).style.display =
+        "block";
+
+}
+
+
+/* =========================
+   RESET DATE
+========================= */
+
+function resetDateCalculator() {
+
+    document.getElementById(
+        "startDate"
+    ).value = "";
+
+    document.getElementById(
+        "endDate"
+    ).value = "";
+
+    document.getElementById(
+        "dateResult"
+    ).style.display = "none";
+
+}
+
+
+/* =========================
+   SERVICE WORKER
+========================= */
+
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener(
+        "load",
+        function() {
+
+            navigator.serviceWorker.register(
+                "./service-worker.js",
+                {
+                    scope: "./"
+                }
+            ).then(function(registration) {
+
+                console.log(
+                    "Service Worker registered:",
+                    registration.scope
+                );
+
+            }).catch(function(error) {
+
+                console.log(
+                    "Service Worker error:",
+                    error
+                );
+
+            });
+
+        }
+    );
+
+}
+
+</script></body>
+</html>
