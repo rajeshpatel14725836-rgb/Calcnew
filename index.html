@@ -93,7 +93,6 @@ input:focus {
     background: white;
 }
 
-/* Error Alert Box */
 .error-msg {
     display: none;
     background: #fef2f2;
@@ -289,7 +288,6 @@ button {
 </div>
 
 <script>
-// ---------- Error Helper ----------
 function showError(elementId, message) {
     var errBox = document.getElementById(elementId);
     errBox.innerText = message;
@@ -302,7 +300,6 @@ function hideError(elementId) {
     errBox.innerText = '';
 }
 
-// ---------- Section 1 Logic ----------
 function calculateDateInterest() {
     hideError('errSection1');
 
@@ -312,7 +309,7 @@ function calculateDateInterest() {
     var endInput = document.getElementById('endDate').value;
 
     if (pInput === "" || rInput === "" || !startInput || !endInput) {
-        showError('errSection1', '⚠️ Kripya Section 1 ke saare fields (Principal, Rate, Start Date, End Date) bharein!');
+        showError('errSection1', '⚠️ Kripya Section 1 ke saare fields bharein!');
         return;
     }
 
@@ -322,7 +319,7 @@ function calculateDateInterest() {
     var end = new Date(endInput);
 
     if (isNaN(p) || isNaN(r) || p <= 0 || r < 0) {
-        showError('errSection1', '⚠️️ Kripya Sahi aur Positive Principal Amount aur Rate daalein!');
+        showError('errSection1', '⚠️ Kripya Sahi aur Positive Principal Amount aur Rate daalein!');
         return;
     }
 
@@ -357,7 +354,6 @@ function resetDateFields() {
     hideError('errSection1');
 }
 
-// ---------- Section 2 Logic ----------
 function calculateSimpleInterest() {
     hideError('errSection2');
 
@@ -366,7 +362,7 @@ function calculateSimpleInterest() {
     var mInput = document.getElementById('simMonths').value.trim();
 
     if (pInput === "" || rInput === "" || mInput === "") {
-        showError('errSection2', '⚠️ Kripya Section 2 ke saare fields (Principal Amount, Monthly Rate, Total Months) bharein!');
+        showError('errSection2', '⚠️ Kripya Section 2 ke saare fields bharein!');
         return;
     }
 
